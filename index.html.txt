@@ -2,26 +2,56 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>AI Reels Caption Generator</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 500px;
+      margin: auto;
+      padding: 2rem;
+    }
+    textarea, button {
+      width: 100%;
+      padding: 0.8rem;
+      margin-top: 1rem;
+      font-size: 1rem;
+    }
+    #result {
+      margin-top: 1.5rem;
+      background: #f5f5f5;
+      padding: 1rem;
+      border-radius: 5px;
+    }
+  </style>
 </head>
 <body>
   <h1>AI Reels Caption Generator</h1>
-  <textarea id="idea" placeholder="Enter your reel idea..." rows="4" cols="50"></textarea>
-  <br/><br/>
+  <textarea id="input" placeholder="Describe your reel..."></textarea>
   <button onclick="generateCaption()">Generate Caption</button>
-  <p id="result"></p>
+  <div id="result"></div>
 
   <script>
     async function generateCaption() {
-      const idea = document.getElementById("idea").value;
-      const res = await fetch('/api/generate', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ idea })
-      });
-      const data = await res.json();
-      document.getElementById("result").innerText = data.caption || 'Error generating caption';
+      const input = document.getElementById('input').value;
+      const resultDiv = document.getElementById('result');
+      resultDiv.innerHTML = "Generating...";
+
+      try {
+        const response = await fetch('/api/generate', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ prompt: input })
+        });
+
+        const data = await response.json();
+        resultDiv.innerHTML = `<strong>Caption:</strong><br>${data.caption}`;
+      } catch (error) {
+        resultDiv.innerHTML = "Error generating caption.";
+        console.error(error);
+      }
     }
   </script>
 </body>
