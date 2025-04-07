@@ -2,11 +2,27 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>AI Reels Caption Generator</title>
 </head>
 <body>
-  <h1>Welcome to AI Reels Caption Generator</h1>
-  <p>This is a placeholder page. Customize your UI as needed.</p>
+  <h1>AI Reels Caption Generator</h1>
+  <textarea id="idea" placeholder="Enter your reel idea..." rows="4" cols="50"></textarea>
+  <br/><br/>
+  <button onclick="generateCaption()">Generate Caption</button>
+  <p id="result"></p>
+
+  <script>
+    async function generateCaption() {
+      const idea = document.getElementById("idea").value;
+      const res = await fetch('/api/generate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ idea })
+      });
+      const data = await res.json();
+      document.getElementById("result").innerText = data.caption || 'Error generating caption';
+    }
+  </script>
 </body>
 </html>
